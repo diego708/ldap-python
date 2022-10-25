@@ -1,0 +1,30 @@
+# Python 3.9.4
+# ldap 2.9.1
+
+from ldap3 import Connection, ALL_ATTRIBUTES, SUBTREE, ServerPool
+
+server = "host_xxxx:port_xxx"
+srv = ServerPool(server)
+
+user_bind = "uid=XXXXX,ou=bind,ou=usuarios,ou=acesso,o=XX,c=XX"
+password_bind = "XXXXXXXXXXX"
+
+conn = Connection(srv, user=user_bind, password=password_bind)
+conn.open()
+conn.bind()
+
+user_login = "XXXXXXXX"
+
+consulta = conn.search("ou=usuarios,ou=acesso,o=XX,c=XX", "(uid=%s)" % user_login, search_scope = SUBTREE, attributes=ALL_ATTRIBUTES)
+user_data = conn.entries[0]
+
+distinguished_name = conn.response[0]
+dn = distinguished_name['dn']
+
+user_password = 'XXXXXXXXXXX'
+login_authorize = Connection(srv, user=dn, password=user_password, check_names=True, lazy=False, raise_exceptions=False)
+login_authorize.bind()
+
+login_authorize.result["description"]
+
+# success
